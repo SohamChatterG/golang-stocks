@@ -1,10 +1,11 @@
 import axios from 'axios';
 
-// Use empty baseURL to work with Nginx proxy
+// Use empty baseURL to match backend routes exactly:
 // Public routes: /signup, /login, /prices, /stocks/{symbol}
 // Protected routes: /api/orders, /api/account
+// Nginx will proxy all these correctly
 const axiosInstance = axios.create({
-    baseURL: '/api',
+    baseURL: '',
     headers: {
         'Content-Type': 'application/json',
     },
