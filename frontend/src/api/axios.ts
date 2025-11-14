@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_BASE_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:8080';
+const API_BASE_URL = 'http://ec2-3-108-9-240.ap-south-1.compute.amazonaws.com:8080';
 
 const axiosInstance = axios.create({
     baseURL: API_BASE_URL,
