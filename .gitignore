@@ -2,7 +2,7 @@
 /backend/stocks-backend
 /backend/*.exe
 /backend/*.test
-
+/backend/.env
 # Frontend
 /frontend/node_modules
 /frontend/dist
