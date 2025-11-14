@@ -1,20 +1,54 @@
 package main
 
 import (
+	"context"
 	"log"
 	"net/http"
 	"stocks-backend/internal/api"
 	"stocks-backend/internal/auth"
+	"stocks-backend/internal/config"
 	"stocks-backend/internal/simulation"
 	"stocks-backend/internal/storage"
 	"stocks-backend/internal/websocket"
+	"time"
 
 	"github.com/gorilla/mux"
+	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 func main() {
-	// Initialize storage
-	store := storage.GetInstance()
+	// Load configuration
+	cfg := config.Load()
+
+	// Connect to MongoDB
+	log.Println("Connecting to MongoDB...")
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+
+	clientOptions := options.Client().ApplyURI(cfg.MongoURI)
+	client, err := mongo.Connect(ctx, clientOptions)
+	if err != nil {
+		log.Fatal("Failed to connect to MongoDB:", err)
+	}
+	defer func() {
+		if err := client.Disconnect(context.Background()); err != nil {
+			log.Println("Error disconnecting from MongoDB:", err)
+		}
+	}()
+
+	// Ping MongoDB to verify connection
+	if err := client.Ping(ctx, nil); err != nil {
+		log.Fatal("Failed to ping MongoDB:", err)
+	}
+	log.Println("Successfully connected to MongoDB!")
+
+	// Initialize storage with MongoDB
+	store, err := storage.NewStorage(client, cfg.DatabaseName)
+	if err != nil {
+		log.Fatal("Failed to initialize storage:", err)
+	}
+	log.Println("Storage initialized successfully")
 
 	// Initialize WebSocket hub
 	hub := websocket.NewHub()
@@ -50,8 +84,8 @@ func main() {
 	protectedRouter.HandleFunc("/account", handlers.GetAccount).Methods("GET", "OPTIONS")
 
 	// Start server
-	log.Println("Server starting on :8080")
-	if err := http.ListenAndServe(":8080", router); err != nil {
+	log.Printf("Server starting on :%s\n", cfg.ServerPort)
+	if err := http.ListenAndServe(":"+cfg.ServerPort, router); err != nil {
 		log.Fatal("Server error:", err)
 	}
 }

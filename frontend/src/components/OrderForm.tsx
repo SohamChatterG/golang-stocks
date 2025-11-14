@@ -136,7 +136,14 @@ const OrderForm: React.FC<OrderFormProps> = ({ onOrderCreated }) => {
                             id="quantity"
                             name="quantity"
                             value={formData.quantity}
-                            onChange={handleChange}
+                            onChange={(e) => {
+                                const value = parseInt(e.target.value);
+                                if (!isNaN(value) && value > 0) {
+                                    setFormData({ ...formData, quantity: value });
+                                } else if (e.target.value === '') {
+                                    setFormData({ ...formData, quantity: 1 });
+                                }
+                            }}
                             min="1"
                             step={1}
                             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -162,12 +169,27 @@ const OrderForm: React.FC<OrderFormProps> = ({ onOrderCreated }) => {
                                 type="number"
                                 id="price"
                                 name="price"
-                                value={formData.price || 0}
-                                onChange={handleChange}
+                                value={formData.price || ''}
+                                onChange={(e) => {
+                                    const value = parseFloat(e.target.value);
+                                    if (!isNaN(value)) {
+                                        const rounded = Math.round(value * 100) / 100;
+                                        setFormData({ ...formData, price: rounded });
+                                    } else if (e.target.value === '') {
+                                        setFormData({ ...formData, price: undefined });
+                                    }
+                                }}
+                                onBlur={(e) => {
+                                    const value = parseFloat(e.target.value);
+                                    if (!isNaN(value)) {
+                                        setFormData({ ...formData, price: Math.round(value * 100) / 100 });
+                                    }
+                                }}
                                 min="0.01"
                                 step="0.01"
                                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                                 required
+                                placeholder="0.00"
                             />
                         )}
                     </div>

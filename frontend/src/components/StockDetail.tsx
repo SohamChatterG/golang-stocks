@@ -186,6 +186,75 @@ const StockDetail: React.FC<StockDetailProps> = ({ symbol, onClose, onOrderCreat
                             />
                         </div>
 
+                        {/* Analytics Section */}
+                        {isMaximized && (
+                            <div className="bg-white dark:bg-slate-800 border-2 border-gray-200 dark:border-slate-700 rounded-lg p-6">
+                                <h3 className="text-xl font-bold text-gray-800 dark:text-gray-100 mb-4">Today's Analytics</h3>
+                                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                                    <div className="stat-card">
+                                        <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">Day High</p>
+                                        <p className="text-2xl font-bold text-green-600 dark:text-green-400">
+                                            {stock.dayHigh !== undefined && stock.dayHigh !== null ? `$${stock.dayHigh.toFixed(2)}` : '—'}
+                                        </p>
+                                    </div>
+                                    <div className="stat-card">
+                                        <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">Day Low</p>
+                                        <p className="text-2xl font-bold text-red-600 dark:text-red-400">
+                                            {stock.dayLow !== undefined && stock.dayLow !== null ? `$${stock.dayLow.toFixed(2)}` : '—'}
+                                        </p>
+                                    </div>
+                                    <div className="stat-card">
+                                        <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">Open</p>
+                                        <p className="text-2xl font-bold text-blue-600 dark:text-blue-400">
+                                            {stock.dayOpen !== undefined && stock.dayOpen !== null ? `$${stock.dayOpen.toFixed(2)}` : '—'}
+                                        </p>
+                                    </div>
+                                    <div className="stat-card">
+                                        <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">Volume</p>
+                                        <p className="text-2xl font-bold text-purple-600 dark:text-purple-400">
+                                            {stock.volume !== undefined && stock.volume !== null ? `${(stock.volume / 1000000).toFixed(2)}M` : '—'}
+                                        </p>
+                                    </div>
+                                    <div className="stat-card">
+                                        <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">Day Range</p>
+                                        <p className="text-lg font-semibold text-gray-800 dark:text-gray-100">
+                                            {stock.dayLow !== undefined && stock.dayLow !== null && stock.dayHigh !== undefined && stock.dayHigh !== null
+                                                ? `$${stock.dayLow.toFixed(2)} - $${stock.dayHigh.toFixed(2)}`
+                                                : '—'}
+                                        </p>
+                                    </div>
+                                    <div className="stat-card">
+                                        <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">Change from Open</p>
+                                        <p className={`text-lg font-semibold ${
+                                            stock.priceHistory && stock.priceHistory.length > 1 && stock.price > stock.priceHistory[1]
+                                                ? 'text-green-600 dark:text-green-400'
+                                                : 'text-red-600 dark:text-red-400'
+                                        }`}>
+                                            {stock.priceHistory && stock.priceHistory.length > 1
+                                                ? `${((stock.price - stock.priceHistory[1]) / stock.priceHistory[1] * 100).toFixed(2)}%`
+                                                : '—'}
+                                        </p>
+                                    </div>
+                                    <div className="stat-card">
+                                        <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">Avg Price</p>
+                                        <p className="text-lg font-semibold text-gray-800 dark:text-gray-100">
+                                            {stock.dayHigh !== undefined && stock.dayHigh !== null && stock.dayLow !== undefined && stock.dayLow !== null
+                                                ? `$${((stock.dayHigh + stock.dayLow) / 2).toFixed(2)}`
+                                                : '—'}
+                                        </p>
+                                    </div>
+                                    <div className="stat-card">
+                                        <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">Volatility</p>
+                                        <p className="text-lg font-semibold text-orange-600 dark:text-orange-400">
+                                            {stock.dayHigh !== undefined && stock.dayHigh !== null && stock.dayLow !== undefined && stock.dayLow !== null && stock.priceHistory && stock.priceHistory.length > 1
+                                                ? `${((stock.dayHigh - stock.dayLow) / stock.priceHistory[1] * 100).toFixed(2)}%`
+                                                : '—'}
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+
                         {/* Order Form */}
                         <div className="bg-white dark:bg-slate-800 border-2 border-gray-200 dark:border-slate-700 rounded-lg p-6">
                             <h3 className="text-xl font-bold text-gray-800 dark:text-gray-100 mb-4">Place Order</h3>
@@ -264,7 +333,14 @@ const StockDetail: React.FC<StockDetailProps> = ({ symbol, onClose, onOrderCreat
                                             min="1"
                                             step={1}
                                             value={orderForm.quantity}
-                                            onChange={(e) => setOrderForm({ ...orderForm, quantity: parseInt(e.target.value) })}
+                                            onChange={(e) => {
+                                                const value = parseInt(e.target.value);
+                                                if (!isNaN(value) && value > 0) {
+                                                    setOrderForm({ ...orderForm, quantity: value });
+                                                } else if (e.target.value === '') {
+                                                    setOrderForm({ ...orderForm, quantity: 1 });
+                                                }
+                                            }}
                                             required
                                             className="w-full px-4 py-2 border-2 border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-gray-900 dark:text-gray-100 rounded-lg focus:border-blue-500 focus:outline-none"
                                             placeholder="Enter quantity"
@@ -287,7 +363,23 @@ const StockDetail: React.FC<StockDetailProps> = ({ symbol, onClose, onOrderCreat
                                                 step="0.01"
                                                 min="0.01"
                                                 value={orderForm.price}
-                                                onChange={(e) => setOrderForm({ ...orderForm, price: parseFloat(e.target.value) })}
+                                                onChange={(e) => {
+                                                    const value = parseFloat(e.target.value);
+                                                    if (!isNaN(value)) {
+                                                        // Round to 2 decimal places
+                                                        const rounded = Math.round(value * 100) / 100;
+                                                        setOrderForm({ ...orderForm, price: rounded });
+                                                    } else {
+                                                        setOrderForm({ ...orderForm, price: 0 });
+                                                    }
+                                                }}
+                                                onBlur={(e) => {
+                                                    // Format on blur to ensure 2 decimal places
+                                                    const value = parseFloat(e.target.value);
+                                                    if (!isNaN(value)) {
+                                                        setOrderForm({ ...orderForm, price: Math.round(value * 100) / 100 });
+                                                    }
+                                                }}
                                                 required
                                                 className="w-full px-4 py-2 border-2 border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-gray-900 dark:text-gray-100 rounded-lg focus:border-blue-500 focus:outline-none"
                                                 placeholder="Enter limit price"

@@ -5,6 +5,10 @@ export interface StockPrice {
     priceHistory: number[];
     logo: string;
     name: string;
+    dayHigh: number;
+    dayLow: number;
+    dayOpen: number;
+    volume: number;
 }
 
 export interface Order {

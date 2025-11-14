@@ -93,9 +93,9 @@ const LivePricesTable: React.FC<LivePricesTableProps> = ({ onStockClick }) => {
                             <img
                                 src={stock.logo}
                                 alt={stock.symbol}
-                                className="w-12 h-12 rounded-full flex-shrink-0"
+                                className="w-12 h-12 rounded-lg object-cover flex-shrink-0"
                                 onError={(e) => {
-                                    e.currentTarget.src = `https://ui-avatars.com/api/?name=${stock.symbol}&background=random`;
+                                    e.currentTarget.src = `https://ui-avatars.com/api/?name=${stock.symbol}&background=4F46E5&color=fff&bold=true&size=128`;
                                 }}
                             />
                             <div className="flex-1 min-w-0">

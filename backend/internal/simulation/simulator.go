@@ -60,12 +60,11 @@ func (s *Simulator) updatePrices() {
 		// Update storage
 		s.storage.UpdatePrice(price.Symbol, newPrice, changePercent)
 
-		// Add to updated prices list
-		updatedPrices = append(updatedPrices, storage.StockPrice{
-			Symbol: price.Symbol,
-			Price:  newPrice,
-			Change: changePercent,
-		})
+		// Fetch the updated stock with all fields (including Logo, Name, and analytics)
+		updatedStock, exists := s.storage.GetPrice(price.Symbol)
+		if exists {
+			updatedPrices = append(updatedPrices, *updatedStock)
+		}
 	}
 
 	// Broadcast updated prices to all WebSocket clients
