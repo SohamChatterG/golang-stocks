@@ -1,9 +1,10 @@
 import axios from 'axios';
 
-const API_BASE_URL = '/api';
-
+// Use empty baseURL to work with Nginx proxy
+// Public routes: /signup, /login, /prices, /stocks/{symbol}
+// Protected routes: /api/orders, /api/account
 const axiosInstance = axios.create({
-    baseURL: API_BASE_URL,
+    baseURL: '/api',
     headers: {
         'Content-Type': 'application/json',
     },
@@ -51,4 +52,3 @@ axiosInstance.interceptors.response.use(
 );
 
 export default axiosInstance;
-export { API_BASE_URL };

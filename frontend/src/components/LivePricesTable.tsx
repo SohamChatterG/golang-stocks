@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { StockPrice } from '../types';
 import PriceChart from './PriceChart';
+import { createWebSocket } from '../utils/websocket';
 
 interface PriceUpdate {
     type: string;
@@ -19,12 +20,8 @@ const LivePricesTable: React.FC<LivePricesTableProps> = ({ onStockClick }) => {
     const previousPrices = useRef<Record<string, number>>({});
 
     useEffect(() => {
-        // Connect to WebSocket - use wss:// for production, ws:// for local
-        const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-        const host = window.location.host;
-        const wsUrl = `${protocol}//${host}/ws`;
-
-        ws.current = new WebSocket(wsUrl);
+        // Connect to WebSocket using the utility function
+        ws.current = createWebSocket('/ws');
 
         ws.current.onopen = () => {
             console.log('WebSocket connected');

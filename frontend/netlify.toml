@@ -1,15 +1,46 @@
+# NOTE: This configuration is for Netlify deployment
+# For EC2 + Nginx deployment, use the Nginx config instead
+
+# Redirect API calls to EC2 backend
 [[redirects]]
   from = "/api/*"
-  to = "http://ec2-3-108-9-240.ap-south-1.compute.amazonaws.com:8080/:splat"
+  to = "http://ec2-3-108-9-240.ap-south-1.compute.amazonaws.com:8080/api/:splat"
   status = 200
   force = true
 
+# Redirect public routes to EC2 backend
+[[redirects]]
+  from = "/login"
+  to = "http://ec2-3-108-9-240.ap-south-1.compute.amazonaws.com:8080/login"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/signup"
+  to = "http://ec2-3-108-9-240.ap-south-1.compute.amazonaws.com:8080/signup"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/prices"
+  to = "http://ec2-3-108-9-240.ap-south-1.compute.amazonaws.com:8080/prices"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/stocks/*"
+  to = "http://ec2-3-108-9-240.ap-south-1.compute.amazonaws.com:8080/stocks/:splat"
+  status = 200
+  force = true
+
+# Redirect WebSocket
 [[redirects]]
   from = "/ws"
   to = "http://ec2-3-108-9-240.ap-south-1.compute.amazonaws.com:8080/ws"
   status = 200
   force = true
 
+# SPA fallback
 [[redirects]]
   from = "/*"
   to = "/index.html"
