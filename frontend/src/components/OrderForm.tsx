@@ -50,12 +50,12 @@ const OrderForm: React.FC<OrderFormProps> = ({ onOrderCreated }) => {
             if (formData.orderType === 'limit') {
                 payload.price = Math.round((formData.price || 0) * 100) / 100;
             }
-            await axios.post('/api/orders', payload);
+            await axios.post('/orders', payload);
             setMessage({ type: 'success', text: 'Order created successfully!' });
 
             // Refresh credits from account after order
             try {
-                const acc = await axios.get('/api/account');
+                const acc = await axios.get('/account');
                 if (typeof acc.data?.credits === 'number') {
                     updateCredits(acc.data.credits);
                 }

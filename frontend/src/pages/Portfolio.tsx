@@ -36,7 +36,7 @@ const Portfolio: React.FC = () => {
     const fetchPortfolio = async () => {
         try {
             // Fetch account to get portfolio
-            const accountResponse = await axios.get('/api/account');
+            const accountResponse = await axios.get('/account');
             const portfolioData = accountResponse.data.portfolio || {};
             // Keep AuthContext credits in sync with server
             if (typeof accountResponse.data?.credits === 'number') {
@@ -48,7 +48,7 @@ const Portfolio: React.FC = () => {
             const stocks: StockPrice[] = stocksResponse.data;
 
             // Fetch orders to compute average buy price per symbol (done orders only)
-            const ordersResponse = await axios.get('/api/orders');
+            const ordersResponse = await axios.get('/orders');
             const orders = (ordersResponse.data || []) as Array<{ symbol: string; side: string; status: string; price: number; quantity: number }>;
 
             // Build portfolio items

@@ -24,7 +24,7 @@ const OrdersTable: React.FC<OrdersTableProps> = ({ refreshTrigger }) => {
         setError('');
         try {
             const [ordersRes, pricesRes] = await Promise.all([
-                axios.get('/api/orders'),
+                axios.get('/orders'),
                 axios.get('/prices')
             ]);
             setOrders(ordersRes.data || []);
