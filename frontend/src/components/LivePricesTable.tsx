@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { API_BASE_URL } from '../api/axios';
 import { StockPrice } from '../types';
 import PriceChart from './PriceChart';
 
@@ -20,8 +19,11 @@ const LivePricesTable: React.FC<LivePricesTableProps> = ({ onStockClick }) => {
     const previousPrices = useRef<Record<string, number>>({});
 
     useEffect(() => {
-        // Connect to WebSocket
-        const wsUrl = API_BASE_URL.replace('http', 'ws') + '/ws';
+        // Connect to WebSocket - use wss:// for production, ws:// for local
+        const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+        const host = window.location.host;
+        const wsUrl = `${protocol}//${host}/ws`;
+
         ws.current = new WebSocket(wsUrl);
 
         ws.current.onopen = () => {

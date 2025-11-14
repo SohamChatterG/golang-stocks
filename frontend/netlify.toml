@@ -1,0 +1,16 @@
+[[redirects]]
+  from = "/api/*"
+  to = "http://ec2-3-108-9-240.ap-south-1.compute.amazonaws.com:8080/:splat"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/ws"
+  to = "http://ec2-3-108-9-240.ap-south-1.compute.amazonaws.com:8080/ws"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200

@@ -225,11 +225,10 @@ const StockDetail: React.FC<StockDetailProps> = ({ symbol, onClose, onOrderCreat
                                     </div>
                                     <div className="stat-card">
                                         <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">Change from Open</p>
-                                        <p className={`text-lg font-semibold ${
-                                            stock.priceHistory && stock.priceHistory.length > 1 && stock.price > stock.priceHistory[1]
+                                        <p className={`text-lg font-semibold ${stock.priceHistory && stock.priceHistory.length > 1 && stock.price > stock.priceHistory[1]
                                                 ? 'text-green-600 dark:text-green-400'
                                                 : 'text-red-600 dark:text-red-400'
-                                        }`}>
+                                            }`}>
                                             {stock.priceHistory && stock.priceHistory.length > 1
                                                 ? `${((stock.price - stock.priceHistory[1]) / stock.priceHistory[1] * 100).toFixed(2)}%`
                                                 : '—'}
