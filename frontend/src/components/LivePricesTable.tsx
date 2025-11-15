@@ -78,34 +78,34 @@ const LivePricesTable: React.FC<LivePricesTableProps> = ({ onStockClick }) => {
     }
 
     return (
-        <div className="bg-white dark:bg-slate-900 rounded-lg shadow-md p-6">
-            <h2 className="text-xl font-bold mb-6 text-gray-800 dark:text-gray-100">Live Stock Prices</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+        <div className="bg-white dark:bg-slate-900 rounded-lg shadow-md p-4 sm:p-6">
+            <h2 className="text-lg sm:text-xl font-bold mb-4 sm:mb-6 text-gray-800 dark:text-gray-100">Live Stock Prices</h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4">
                 {prices.map((stock) => (
                     <div
                         key={stock.symbol}
                         onClick={() => onStockClick(stock.symbol)}
-                        className="stock-card"
+                        className="stock-card p-3 sm:p-4"
                     >
                         {/* Stock Info */}
-                        <div className="flex items-start gap-3 mb-3">
+                        <div className="flex items-start gap-2 sm:gap-3 mb-2 sm:mb-3">
                             <img
                                 src={stock.logo}
                                 alt={stock.symbol}
-                                className="w-12 h-12 rounded-lg object-cover flex-shrink-0"
+                                className="w-10 h-10 sm:w-12 sm:h-12 rounded-lg object-cover flex-shrink-0"
                                 onError={(e) => {
                                     e.currentTarget.src = `https://ui-avatars.com/api/?name=${stock.symbol}&background=4F46E5&color=fff&bold=true&size=128`;
                                 }}
                             />
                             <div className="flex-1 min-w-0">
-                                <div className="font-bold text-gray-900 dark:text-gray-100 text-lg">{stock.symbol}</div>
+                                <div className="font-bold text-gray-900 dark:text-gray-100 text-base sm:text-lg">{stock.symbol}</div>
                                 <div className="text-xs text-gray-600 dark:text-gray-400 truncate">{stock.name}</div>
                             </div>
                         </div>
 
                         {/* Price and Change */}
-                        <div className="mb-3">
-                            <div className="text-2xl font-bold text-gray-900 dark:text-gray-100">
+                        <div className="mb-2 sm:mb-3">
+                            <div className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-gray-100">
                                 ${stock.price.toFixed(2)}
                             </div>
                             <div
@@ -118,7 +118,9 @@ const LivePricesTable: React.FC<LivePricesTableProps> = ({ onStockClick }) => {
                         </div>
 
                         {/* Mini Chart */}
-                        {renderMiniChart(stock.priceHistory)}
+                        <div className="h-12 sm:h-16">
+                            {renderMiniChart(stock.priceHistory)}
+                        </div>
                     </div>
                 ))}
             </div>

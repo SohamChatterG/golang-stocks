@@ -3,6 +3,7 @@ import axios from '../api/axios';
 import { StockPrice } from '../types';
 import PriceChart from './PriceChart';
 import { useAuth } from '../context/AuthContext';
+import { useToast } from '../context/ToastContext';
 
 interface StockDetailProps {
     symbol: string;
@@ -13,6 +14,7 @@ interface StockDetailProps {
 
 const StockDetail: React.FC<StockDetailProps> = ({ symbol, onClose, onOrderCreated, defaultSide }) => {
     const { updateCredits } = useAuth();
+    const { success, error } = useToast();
     const [stock, setStock] = useState<StockPrice | null>(null);
     const [loading, setLoading] = useState(true);
     const [isMaximized, setIsMaximized] = useState(false);
@@ -23,7 +25,6 @@ const StockDetail: React.FC<StockDetailProps> = ({ symbol, onClose, onOrderCreat
         price: 0,
     });
     const [orderLoading, setOrderLoading] = useState(false);
-    const [message, setMessage] = useState<{ type: string; text: string }>({ type: '', text: '' });
 
     useEffect(() => {
         fetchStockDetail();
@@ -49,7 +50,6 @@ const StockDetail: React.FC<StockDetailProps> = ({ symbol, onClose, onOrderCreat
 
     const handleOrderSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        setMessage({ type: '', text: '' });
         setOrderLoading(true);
 
         try {
@@ -64,7 +64,7 @@ const StockDetail: React.FC<StockDetailProps> = ({ symbol, onClose, onOrderCreat
                 payload.price = Math.round(orderForm.price * 100) / 100;
             }
             await axios.post('/orders', payload);
-            setMessage({ type: 'success', text: 'Order placed successfully!' });
+            success('Order placed successfully!');
             // Refresh credits from account
             try {
                 const acc = await axios.get('/account');
@@ -76,14 +76,8 @@ const StockDetail: React.FC<StockDetailProps> = ({ symbol, onClose, onOrderCreat
                 console.warn('Failed to refresh account after order');
             }
             onOrderCreated();
-            setTimeout(() => {
-                setMessage({ type: '', text: '' });
-            }, 3000);
         } catch (err: any) {
-            setMessage({
-                type: 'error',
-                text: err.response?.data?.error || 'Failed to place order'
-            });
+            error(err.response?.data?.error || 'Failed to place order');
         } finally {
             setOrderLoading(false);
         }
@@ -100,45 +94,45 @@ const StockDetail: React.FC<StockDetailProps> = ({ symbol, onClose, onOrderCreat
     }
 
     return (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-            <div className={`bg-white dark:bg-slate-900 rounded-lg shadow-xl overflow-hidden transition-all duration-300 ${isMaximized ? 'w-full h-full' : 'max-w-2xl w-full max-h-[90vh]'
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-2 sm:p-4">
+            <div className={`bg-white dark:bg-slate-900 rounded-lg shadow-xl overflow-hidden transition-all duration-300 ${isMaximized ? 'w-full h-full' : 'max-w-2xl w-full max-h-[95vh]'
                 }`}>
                 {/* Header */}
-                <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white p-4">
+                <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white p-3 sm:p-4">
                     <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-3">
+                        <div className="flex items-center gap-2 sm:gap-3">
                             <img
                                 src={stock.logo}
                                 alt={stock.symbol}
-                                className="w-12 h-12 rounded-full bg-white p-1"
+                                className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white p-1"
                                 onError={(e) => {
                                     e.currentTarget.src = `https://ui-avatars.com/api/?name=${stock.symbol}&background=random`;
                                 }}
                             />
                             <div>
-                                <h2 className="text-2xl font-bold">{stock.symbol}</h2>
-                                <p className="text-sm text-blue-100">{stock.name}</p>
+                                <h2 className="text-xl sm:text-2xl font-bold">{stock.symbol}</h2>
+                                <p className="text-xs sm:text-sm text-blue-100">{stock.name}</p>
                             </div>
                         </div>
-                        <div className="flex items-center gap-2">
+                        <div className="flex items-center gap-1 sm:gap-2">
                             <button
                                 onClick={() => setIsMaximized(!isMaximized)}
-                                className="text-white hover:bg-white hover:bg-opacity-20 p-2 rounded transition-colors"
+                                className="text-white hover:bg-white hover:bg-opacity-20 p-1.5 sm:p-2 rounded transition-colors"
                                 title={isMaximized ? 'Minimize' : 'Maximize'}
                             >
                                 {isMaximized ? (
-                                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 9V4.5M9 9H4.5M9 9L3.75 3.75M9 15v4.5M9 15H4.5M9 15l-5.25 5.25M15 9h4.5M15 9V4.5M15 9l5.25-5.25M15 15h4.5M15 15v4.5m0-4.5l5.25 5.25" />
                                     </svg>
                                 ) : (
-                                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
                                     </svg>
                                 )}
                             </button>
                             <button
                                 onClick={onClose}
-                                className="text-white hover:bg-white hover:bg-opacity-20 p-2 rounded transition-colors text-2xl font-bold leading-none"
+                                className="text-white hover:bg-white hover:bg-opacity-20 p-1.5 sm:p-2 rounded transition-colors text-xl sm:text-2xl font-bold leading-none"
                             >
                                 ×
                             </button>
@@ -146,28 +140,20 @@ const StockDetail: React.FC<StockDetailProps> = ({ symbol, onClose, onOrderCreat
                     </div>
 
                     {/* Current Price */}
-                    <div className="mt-3">
-                        <div className="text-3xl font-bold">${stock.price.toFixed(2)}</div>
-                        <div className={`text-sm ${stock.change >= 0 ? 'text-green-300' : 'text-red-300'}`}>
+                    <div className="mt-2 sm:mt-3">
+                        <div className="text-2xl sm:text-3xl font-bold">${stock.price.toFixed(2)}</div>
+                        <div className={`text-xs sm:text-sm ${stock.change >= 0 ? 'text-green-300' : 'text-red-300'}`}>
                             {stock.change >= 0 ? '+' : ''}{stock.change.toFixed(2)}%
                         </div>
                     </div>
                 </div>
 
-                <div className={`overflow-y-auto ${isMaximized ? 'h-[calc(100%-180px)]' : 'max-h-[calc(90vh-180px)]'}`}>
-                    <div className="p-6 space-y-6">
-                        {/* Message */}
-                        {message.text && (
-                            <div className={`mb-4 p-4 rounded-lg ${message.type === 'success' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
-                                }`}>
-                                {message.text}
-                            </div>
-                        )}
-
+                <div className={`overflow-y-auto ${isMaximized ? 'h-[calc(100%-160px)] sm:h-[calc(100%-180px)]' : 'max-h-[calc(95vh-160px)] sm:max-h-[calc(95vh-180px)]'}`}>
+                    <div className="p-3 sm:p-6 space-y-4 sm:space-y-6">
                         {/* Chart */}
-                        <div className="bg-white dark:bg-slate-800 border-2 border-gray-200 dark:border-slate-700 rounded-lg p-4">
+                        <div className="bg-white dark:bg-slate-800 border-2 border-gray-200 dark:border-slate-700 rounded-lg p-3 sm:p-4">
                             <div className="flex items-center justify-between mb-2">
-                                <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-100">Price Chart</h3>
+                                <h3 className="text-base sm:text-lg font-semibold text-gray-800 dark:text-gray-100">Price Chart</h3>
                                 <span className="text-xs text-gray-500 dark:text-gray-400">Last {stock.priceHistory?.length || 0} ticks</span>
                             </div>
                             <PriceChart
@@ -188,44 +174,44 @@ const StockDetail: React.FC<StockDetailProps> = ({ symbol, onClose, onOrderCreat
 
                         {/* Analytics Section */}
                         {isMaximized && (
-                            <div className="bg-white dark:bg-slate-800 border-2 border-gray-200 dark:border-slate-700 rounded-lg p-6">
-                                <h3 className="text-xl font-bold text-gray-800 dark:text-gray-100 mb-4">Today's Analytics</h3>
-                                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                            <div className="bg-white dark:bg-slate-800 border-2 border-gray-200 dark:border-slate-700 rounded-lg p-4 sm:p-6">
+                                <h3 className="text-lg sm:text-xl font-bold text-gray-800 dark:text-gray-100 mb-3 sm:mb-4">Today's Analytics</h3>
+                                <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
                                     <div className="stat-card">
-                                        <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">Day High</p>
-                                        <p className="text-2xl font-bold text-green-600 dark:text-green-400">
+                                        <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 mb-1">Day High</p>
+                                        <p className="text-lg sm:text-2xl font-bold text-green-600 dark:text-green-400">
                                             {stock.dayHigh !== undefined && stock.dayHigh !== null ? `$${stock.dayHigh.toFixed(2)}` : '—'}
                                         </p>
                                     </div>
                                     <div className="stat-card">
-                                        <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">Day Low</p>
-                                        <p className="text-2xl font-bold text-red-600 dark:text-red-400">
+                                        <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 mb-1">Day Low</p>
+                                        <p className="text-lg sm:text-2xl font-bold text-red-600 dark:text-red-400">
                                             {stock.dayLow !== undefined && stock.dayLow !== null ? `$${stock.dayLow.toFixed(2)}` : '—'}
                                         </p>
                                     </div>
                                     <div className="stat-card">
-                                        <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">Open</p>
-                                        <p className="text-2xl font-bold text-blue-600 dark:text-blue-400">
+                                        <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 mb-1">Open</p>
+                                        <p className="text-lg sm:text-2xl font-bold text-blue-600 dark:text-blue-400">
                                             {stock.dayOpen !== undefined && stock.dayOpen !== null ? `$${stock.dayOpen.toFixed(2)}` : '—'}
                                         </p>
                                     </div>
                                     <div className="stat-card">
-                                        <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">Volume</p>
-                                        <p className="text-2xl font-bold text-purple-600 dark:text-purple-400">
+                                        <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 mb-1">Volume</p>
+                                        <p className="text-lg sm:text-2xl font-bold text-purple-600 dark:text-purple-400">
                                             {stock.volume !== undefined && stock.volume !== null ? `${(stock.volume / 1000000).toFixed(2)}M` : '—'}
                                         </p>
                                     </div>
                                     <div className="stat-card">
-                                        <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">Day Range</p>
-                                        <p className="text-lg font-semibold text-gray-800 dark:text-gray-100">
+                                        <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 mb-1">Day Range</p>
+                                        <p className="text-sm sm:text-lg font-semibold text-gray-800 dark:text-gray-100">
                                             {stock.dayLow !== undefined && stock.dayLow !== null && stock.dayHigh !== undefined && stock.dayHigh !== null
                                                 ? `$${stock.dayLow.toFixed(2)} - $${stock.dayHigh.toFixed(2)}`
                                                 : '—'}
                                         </p>
                                     </div>
                                     <div className="stat-card">
-                                        <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">Change from Open</p>
-                                        <p className={`text-lg font-semibold ${stock.priceHistory && stock.priceHistory.length > 1 && stock.price > stock.priceHistory[1]
+                                        <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 mb-1">Change from Open</p>
+                                        <p className={`text-sm sm:text-lg font-semibold ${stock.priceHistory && stock.priceHistory.length > 1 && stock.price > stock.priceHistory[1]
                                             ? 'text-green-600 dark:text-green-400'
                                             : 'text-red-600 dark:text-red-400'
                                             }`}>
@@ -235,16 +221,16 @@ const StockDetail: React.FC<StockDetailProps> = ({ symbol, onClose, onOrderCreat
                                         </p>
                                     </div>
                                     <div className="stat-card">
-                                        <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">Avg Price</p>
-                                        <p className="text-lg font-semibold text-gray-800 dark:text-gray-100">
+                                        <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 mb-1">Avg Price</p>
+                                        <p className="text-sm sm:text-lg font-semibold text-gray-800 dark:text-gray-100">
                                             {stock.dayHigh !== undefined && stock.dayHigh !== null && stock.dayLow !== undefined && stock.dayLow !== null
                                                 ? `$${((stock.dayHigh + stock.dayLow) / 2).toFixed(2)}`
                                                 : '—'}
                                         </p>
                                     </div>
                                     <div className="stat-card">
-                                        <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">Volatility</p>
-                                        <p className="text-lg font-semibold text-orange-600 dark:text-orange-400">
+                                        <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 mb-1">Volatility</p>
+                                        <p className="text-sm sm:text-lg font-semibold text-orange-600 dark:text-orange-400">
                                             {stock.dayHigh !== undefined && stock.dayHigh !== null && stock.dayLow !== undefined && stock.dayLow !== null && stock.priceHistory && stock.priceHistory.length > 1
                                                 ? `${((stock.dayHigh - stock.dayLow) / stock.priceHistory[1] * 100).toFixed(2)}%`
                                                 : '—'}
@@ -255,15 +241,15 @@ const StockDetail: React.FC<StockDetailProps> = ({ symbol, onClose, onOrderCreat
                         )}
 
                         {/* Order Form */}
-                        <div className="bg-white dark:bg-slate-800 border-2 border-gray-200 dark:border-slate-700 rounded-lg p-6">
-                            <h3 className="text-xl font-bold text-gray-800 dark:text-gray-100 mb-4">Place Order</h3>
+                        <div className="bg-white dark:bg-slate-800 border-2 border-gray-200 dark:border-slate-700 rounded-lg p-4 sm:p-6">
+                            <h3 className="text-lg sm:text-xl font-bold text-gray-800 dark:text-gray-100 mb-3 sm:mb-4">Place Order</h3>
                             <form onSubmit={handleOrderSubmit}>
                                 {/* Buy/Sell Toggle */}
-                                <div className="flex gap-4 mb-4">
+                                <div className="flex gap-2 sm:gap-4 mb-3 sm:mb-4">
                                     <button
                                         type="button"
                                         onClick={() => setOrderForm({ ...orderForm, side: 'buy' })}
-                                        className={`flex-1 py-3 rounded-lg font-semibold transition-colors ${orderForm.side === 'buy'
+                                        className={`flex-1 py-2 sm:py-3 rounded-lg text-sm sm:text-base font-semibold transition-colors ${orderForm.side === 'buy'
                                             ? 'bg-green-600 text-white'
                                             : 'bg-gray-200 dark:bg-slate-700 text-gray-700 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-slate-600'
                                             }`}
@@ -273,7 +259,7 @@ const StockDetail: React.FC<StockDetailProps> = ({ symbol, onClose, onOrderCreat
                                     <button
                                         type="button"
                                         onClick={() => setOrderForm({ ...orderForm, side: 'sell' })}
-                                        className={`flex-1 py-3 rounded-lg font-semibold transition-colors ${orderForm.side === 'sell'
+                                        className={`flex-1 py-2 sm:py-3 rounded-lg text-sm sm:text-base font-semibold transition-colors ${orderForm.side === 'sell'
                                             ? 'bg-red-600 text-white'
                                             : 'bg-gray-200 dark:bg-slate-700 text-gray-700 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-slate-600'
                                             }`}
@@ -283,11 +269,11 @@ const StockDetail: React.FC<StockDetailProps> = ({ symbol, onClose, onOrderCreat
                                 </div>
 
                                 {/* Market/Limit Toggle */}
-                                <div className="flex gap-4 mb-6">
+                                <div className="flex gap-2 sm:gap-4 mb-4 sm:mb-6">
                                     <button
                                         type="button"
                                         onClick={() => setOrderForm({ ...orderForm, orderType: 'market' })}
-                                        className={`flex-1 py-2 rounded-lg font-semibold transition-colors ${orderForm.orderType === 'market'
+                                        className={`flex-1 py-2 rounded-lg text-sm sm:text-base font-semibold transition-colors ${orderForm.orderType === 'market'
                                             ? 'bg-blue-600 text-white'
                                             : 'bg-gray-200 dark:bg-slate-700 text-gray-700 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-slate-600'
                                             }`}
@@ -297,7 +283,7 @@ const StockDetail: React.FC<StockDetailProps> = ({ symbol, onClose, onOrderCreat
                                     <button
                                         type="button"
                                         onClick={() => setOrderForm({ ...orderForm, orderType: 'limit' })}
-                                        className={`flex-1 py-2 rounded-lg font-semibold transition-colors ${orderForm.orderType === 'limit'
+                                        className={`flex-1 py-2 rounded-lg text-sm sm:text-base font-semibold transition-colors ${orderForm.orderType === 'limit'
                                             ? 'bg-blue-600 text-white'
                                             : 'bg-gray-200 dark:bg-slate-700 text-gray-700 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-slate-600'
                                             }`}
@@ -307,24 +293,24 @@ const StockDetail: React.FC<StockDetailProps> = ({ symbol, onClose, onOrderCreat
                                 </div>
 
                                 {orderForm.orderType === 'market' && (
-                                    <div className="mb-4 p-3 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg">
-                                        <p className="text-sm text-blue-800 dark:text-blue-300">
+                                    <div className="mb-3 sm:mb-4 p-2 sm:p-3 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg">
+                                        <p className="text-xs sm:text-sm text-blue-800 dark:text-blue-300">
                                             <strong>Market Order:</strong> Will execute immediately at current market price (${stock.price.toFixed(2)})
                                         </p>
                                     </div>
                                 )}
 
                                 {orderForm.orderType === 'limit' && (
-                                    <div className="mb-4 p-3 bg-purple-50 dark:bg-purple-900/20 border border-purple-200 dark:border-purple-800 rounded-lg">
-                                        <p className="text-sm text-purple-800 dark:text-purple-300">
+                                    <div className="mb-3 sm:mb-4 p-2 sm:p-3 bg-purple-50 dark:bg-purple-900/20 border border-purple-200 dark:border-purple-800 rounded-lg">
+                                        <p className="text-xs sm:text-sm text-purple-800 dark:text-purple-300">
                                             <strong>Limit Order:</strong> Will execute when price reaches your set price
                                         </p>
                                     </div>
                                 )}
 
-                                <div className="grid grid-cols-2 gap-4 mb-6">
+                                <div className="grid grid-cols-2 gap-3 sm:gap-4 mb-4 sm:mb-6">
                                     <div>
-                                        <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
+                                        <label className="block text-xs sm:text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1 sm:mb-2">
                                             Quantity
                                         </label>
                                         <input
@@ -341,12 +327,12 @@ const StockDetail: React.FC<StockDetailProps> = ({ symbol, onClose, onOrderCreat
                                                 }
                                             }}
                                             required
-                                            className="w-full px-4 py-2 border-2 border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-gray-900 dark:text-gray-100 rounded-lg focus:border-blue-500 focus:outline-none"
+                                            className="w-full px-3 sm:px-4 py-2 text-sm sm:text-base border-2 border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-gray-900 dark:text-gray-100 rounded-lg focus:border-blue-500 focus:outline-none"
                                             placeholder="Enter quantity"
                                         />
                                     </div>
                                     <div>
-                                        <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
+                                        <label className="block text-xs sm:text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1 sm:mb-2">
                                             {orderForm.orderType === 'market' ? 'Price (Current)' : 'Limit Price'}
                                         </label>
                                         {orderForm.orderType === 'market' ? (
@@ -354,7 +340,7 @@ const StockDetail: React.FC<StockDetailProps> = ({ symbol, onClose, onOrderCreat
                                                 type="text"
                                                 value={stock.price.toFixed(2)}
                                                 readOnly
-                                                className="w-full px-4 py-2 border-2 border-gray-300 dark:border-slate-600 rounded-lg bg-gray-100 dark:bg-slate-700 text-gray-900 dark:text-gray-100 cursor-not-allowed"
+                                                className="w-full px-3 sm:px-4 py-2 text-sm sm:text-base border-2 border-gray-300 dark:border-slate-600 rounded-lg bg-gray-100 dark:bg-slate-700 text-gray-900 dark:text-gray-100 cursor-not-allowed"
                                             />
                                         ) : (
                                             <input
@@ -380,7 +366,7 @@ const StockDetail: React.FC<StockDetailProps> = ({ symbol, onClose, onOrderCreat
                                                     }
                                                 }}
                                                 required
-                                                className="w-full px-4 py-2 border-2 border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-gray-900 dark:text-gray-100 rounded-lg focus:border-blue-500 focus:outline-none"
+                                                className="w-full px-3 sm:px-4 py-2 text-sm sm:text-base border-2 border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-gray-900 dark:text-gray-100 rounded-lg focus:border-blue-500 focus:outline-none"
                                                 placeholder="Enter limit price"
                                             />
                                         )}
@@ -390,7 +376,7 @@ const StockDetail: React.FC<StockDetailProps> = ({ symbol, onClose, onOrderCreat
                                 <button
                                     type="submit"
                                     disabled={orderLoading}
-                                    className={`w-full py-3 rounded-lg font-semibold text-white transition-colors ${orderLoading
+                                    className={`w-full py-2 sm:py-3 rounded-lg text-sm sm:text-base font-semibold text-white transition-colors ${orderLoading
                                         ? 'bg-gray-400 cursor-not-allowed'
                                         : orderForm.side === 'buy'
                                             ? 'bg-green-600 hover:bg-green-700'

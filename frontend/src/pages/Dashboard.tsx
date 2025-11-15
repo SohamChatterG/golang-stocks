@@ -33,32 +33,49 @@ const Dashboard: React.FC = () => {
         <div className="min-h-screen bg-gray-100 dark:bg-slate-950">
             {/* Header */}
             <header className="bg-white/90 dark:bg-slate-900/80 backdrop-blur shadow-sm">
-                <div className="main-container py-4">
-                    <div className="flex justify-between items-center">
-                        <div>
-                            <h1 className="page-title">Trading Dashboard</h1>
-                            <p className="text-sm text-gray-600 dark:text-gray-300 mt-1">
-                                Credits: <span className="font-bold text-green-600 dark:text-emerald-400">${credits.toFixed(2)}</span>
-                            </p>
-                        </div>
-                        <div className="flex items-center gap-3">
-                            <span className="text-gray-600 dark:text-gray-300">Welcome, <strong>{user}</strong></span>
+                <div className="main-container py-3 sm:py-4">
+                    <div className="flex flex-col gap-3 sm:flex-row sm:justify-between sm:items-center">
+                        <div className="flex justify-between items-center">
+                            <div>
+                                <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 dark:text-white tracking-tight">
+                                    Trading Dashboard
+                                </h1>
+                                <p className="text-sm text-gray-600 dark:text-gray-300 mt-1">
+                                    Credits: <span className="font-bold text-green-600 dark:text-emerald-400">${credits.toFixed(2)}</span>
+                                </p>
+                            </div>
                             <button
                                 onClick={toggle}
-                                className="px-3 py-2 rounded-lg border-2 border-gray-200 dark:border-slate-700 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-slate-800 transition-all duration-200"
+                                className="sm:hidden px-3 py-2 rounded-lg border-2 border-gray-200 dark:border-slate-700 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-slate-800 transition-all duration-200"
                                 title="Toggle theme"
                             >
                                 {dark ? '☀️' : '🌙'}
                             </button>
-                            <NavButton to="/portfolio" variant="secondary">
-                                Portfolio
-                            </NavButton>
-                            <NavButton to="/orders" variant="secondary">
-                                Orders
-                            </NavButton>
-                            <NavButton to="/login" variant="danger" onClick={handleLogout}>
-                                Logout
-                            </NavButton>
+                        </div>
+
+                        <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-3">
+                            <span className="text-sm sm:text-base text-gray-600 dark:text-gray-300 sm:block hidden">
+                                Welcome, <strong>{user}</strong>
+                            </span>
+                            <button
+                                onClick={toggle}
+                                className="hidden sm:block px-3 py-2 rounded-lg border-2 border-gray-200 dark:border-slate-700 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-slate-800 transition-all duration-200"
+                                title="Toggle theme"
+                            >
+                                {dark ? '☀️' : '🌙'}
+                            </button>
+
+                            <div className="flex gap-2 sm:gap-3">
+                                <NavButton to="/portfolio" variant="secondary">
+                                    Portfolio
+                                </NavButton>
+                                <NavButton to="/orders" variant="secondary">
+                                    Orders
+                                </NavButton>
+                                <NavButton to="/login" variant="danger" onClick={handleLogout}>
+                                    Logout
+                                </NavButton>
+                            </div>
                         </div>
                     </div>
                 </div>

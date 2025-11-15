@@ -118,28 +118,40 @@ const Portfolio: React.FC = () => {
         <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 dark:from-slate-900 dark:to-slate-950">
             {/* Header */}
             <header className="bg-white/90 dark:bg-slate-900/80 backdrop-blur shadow-sm">
-                <div className="main-container py-4">
-                    <div className="flex justify-between items-center">
-                        <div>
-                            <h1 className="page-title">Portfolio</h1>
-                            <p className="text-sm text-gray-600 dark:text-gray-300 mt-1">Welcome back, <span className="font-semibold">{user}</span></p>
-                        </div>
-                        <div className="flex items-center gap-3">
+                <div className="main-container py-3 sm:py-4">
+                    <div className="flex flex-col gap-3 sm:flex-row sm:justify-between sm:items-center">
+                        <div className="flex justify-between items-center">
+                            <div>
+                                <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 dark:text-white tracking-tight">Portfolio</h1>
+                                <p className="text-sm text-gray-600 dark:text-gray-300 mt-1">Welcome back, <span className="font-semibold">{user}</span></p>
+                            </div>
                             <button
                                 onClick={toggle}
-                                className="px-3 py-2 rounded-lg border-2 border-gray-200 dark:border-slate-700 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-slate-800 transition-all duration-200"
+                                className="sm:hidden px-3 py-2 rounded-lg border-2 border-gray-200 dark:border-slate-700 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-slate-800 transition-all duration-200"
                             >
                                 {dark ? '☀️' : '🌙'}
                             </button>
-                            <NavButton to="/dashboard" variant="secondary">
-                                Dashboard
-                            </NavButton>
-                            <NavButton to="/orders" variant="secondary">
-                                Orders
-                            </NavButton>
-                            <NavButton to="/login" variant="danger" onClick={() => { logout(); navigate('/login'); }}>
-                                Logout
-                            </NavButton>
+                        </div>
+
+                        <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-3">
+                            <button
+                                onClick={toggle}
+                                className="hidden sm:block px-3 py-2 rounded-lg border-2 border-gray-200 dark:border-slate-700 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-slate-800 transition-all duration-200"
+                            >
+                                {dark ? '☀️' : '🌙'}
+                            </button>
+
+                            <div className="flex gap-2 sm:gap-3">
+                                <NavButton to="/dashboard" variant="secondary">
+                                    Dashboard
+                                </NavButton>
+                                <NavButton to="/orders" variant="secondary">
+                                    Orders
+                                </NavButton>
+                                <NavButton to="/login" variant="danger" onClick={() => { logout(); navigate('/login'); }}>
+                                    Logout
+                                </NavButton>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -151,40 +163,40 @@ const Portfolio: React.FC = () => {
                     const pct = investedTotal > 0 ? (profit / investedTotal) * 100 : 0;
                     const profitPositive = profit >= 0;
                     return (
-                        <div className="grid grid-cols-1 md:grid-cols-5 gap-6 mb-6">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4 sm:gap-6 mb-6">
                             {/* Credits */}
                             <div className="stat-card">
                                 <div className="flex items-center justify-between mb-2">
-                                    <h3 className="text-base font-semibold text-gray-900 dark:text-white">Available Credits</h3>
+                                    <h3 className="text-sm sm:text-base font-semibold text-gray-900 dark:text-white">Available Credits</h3>
                                     <span className="text-xs font-medium bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 px-2 py-1 rounded">Cash</span>
                                 </div>
-                                <p className="text-3xl font-bold text-gray-900 dark:text-white">${credits.toFixed(2)}</p>
+                                <p className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">${credits.toFixed(2)}</p>
                             </div>
                             {/* Holdings Value */}
                             <div className="stat-card">
                                 <div className="flex items-center justify-between mb-2">
-                                    <h3 className="text-base font-semibold text-gray-900 dark:text-white">Holdings Value</h3>
+                                    <h3 className="text-sm sm:text-base font-semibold text-gray-900 dark:text-white">Holdings Value</h3>
                                     <span className="text-xs font-medium bg-sky-500/20 text-sky-600 dark:text-sky-400 px-2 py-1 rounded">Live</span>
                                 </div>
-                                <p className="text-3xl font-bold text-gray-900 dark:text-white">${totalValue.toFixed(2)}</p>
+                                <p className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">${totalValue.toFixed(2)}</p>
                             </div>
                             {/* Invested Amount */}
                             <div className="stat-card">
                                 <div className="flex items-center justify-between mb-2">
-                                    <h3 className="text-base font-semibold text-gray-900 dark:text-white">Invested Amount</h3>
+                                    <h3 className="text-sm sm:text-base font-semibold text-gray-900 dark:text-white">Invested Amount</h3>
                                     <span className="text-xs font-medium bg-indigo-500/20 text-indigo-600 dark:text-indigo-400 px-2 py-1 rounded">Cost</span>
                                 </div>
-                                <p className="text-3xl font-bold text-gray-900 dark:text-white">${investedTotal.toFixed(2)}</p>
+                                <p className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">${investedTotal.toFixed(2)}</p>
                             </div>
                             {/* Unrealized P/L */}
                             <div className="stat-card">
                                 <div className="flex items-center justify-between mb-2">
-                                    <h3 className="text-base font-semibold text-gray-900 dark:text-white">Unrealized P/L</h3>
+                                    <h3 className="text-sm sm:text-base font-semibold text-gray-900 dark:text-white">Unrealized P/L</h3>
                                     <span className={`text-xs font-medium px-2 py-1 rounded ${profitPositive ? 'bg-emerald-500/20 text-emerald-600 dark:text-emerald-400' : 'bg-red-500/20 text-red-600 dark:text-red-400'}`}>
                                         {profitPositive ? 'Gain' : 'Loss'}
                                     </span>
                                 </div>
-                                <p className={`text-3xl font-bold ${profitPositive ? 'text-emerald-600 dark:text-emerald-400' : 'text-red-600 dark:text-red-400'}`}>
+                                <p className={`text-2xl sm:text-3xl font-bold ${profitPositive ? 'text-emerald-600 dark:text-emerald-400' : 'text-red-600 dark:text-red-400'}`}>
                                     {profitPositive ? '+' : ''}{profit.toFixed(2)}
                                 </p>
                                 <p className={`text-sm mt-1 ${profitPositive ? 'text-emerald-600 dark:text-emerald-400' : 'text-red-600 dark:text-red-400'}`}>
@@ -227,78 +239,130 @@ const Portfolio: React.FC = () => {
                             </button>
                         </div>
                     ) : (
-                        <div className="overflow-x-auto">
-                            <table className="min-w-full divide-y divide-gray-200 dark:divide-slate-700">
-                                <thead className="bg-gray-50 dark:bg-slate-800">
-                                    <tr>
-                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                                            Stock
-                                        </th>
-                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                                            Quantity
-                                        </th>
-                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                                            Avg Buy Price
-                                        </th>
-                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                                            Total Value
-                                        </th>
-                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                                            Actions
-                                        </th>
-                                    </tr>
-                                </thead>
-                                <tbody className="bg-white dark:bg-slate-900 divide-y divide-gray-200 dark:divide-slate-700">
+                        <>
+                            {/* Mobile View */}
+                            <div className="block sm:hidden">
+                                <div className="space-y-4 p-4">
                                     {portfolio.map((item) => (
-                                        <tr key={item.symbol} className="hover:bg-gray-50 dark:hover:bg-slate-800 transition-colors">
-                                            <td className="px-6 py-4 whitespace-nowrap">
-                                                <div className="flex items-center">
+                                        <div key={item.symbol} className="bg-white dark:bg-slate-800 rounded-lg p-4 border border-gray-200 dark:border-slate-700">
+                                            <div className="flex items-center justify-between mb-3">
+                                                <div className="flex items-center gap-3">
                                                     <img
                                                         src={item.logo}
                                                         alt={item.symbol}
-                                                        className="w-10 h-10 rounded-full mr-3"
+                                                        className="w-10 h-10 rounded-full"
                                                         onError={(e) => {
                                                             e.currentTarget.src = `https://ui-avatars.com/api/?name=${item.symbol}&background=random`;
                                                         }}
                                                     />
                                                     <div>
                                                         <div className="text-sm font-bold text-gray-900 dark:text-gray-100">{item.symbol}</div>
-                                                        <div className="text-sm text-gray-500 dark:text-gray-400">{item.name}</div>
+                                                        <div className="text-xs text-gray-500 dark:text-gray-400">{item.name}</div>
                                                     </div>
                                                 </div>
-                                            </td>
-                                            <td className="px-6 py-4 whitespace-nowrap">
-                                                <div className="text-sm font-semibold text-gray-900 dark:text-gray-100">{item.quantity}</div>
-                                            </td>
-                                            {/* Current Price column removed per spec */}
-                                            <td className="px-6 py-4 whitespace-nowrap">
-                                                {item.avgPrice !== undefined ? (
-                                                    <div className="text-sm font-semibold text-gray-700 dark:text-gray-300">${item.avgPrice.toFixed(2)}</div>
-                                                ) : (
-                                                    <div className="text-sm text-gray-400 dark:text-gray-500">—</div>
-                                                )}
-                                            </td>
-                                            <td className="px-6 py-4 whitespace-nowrap">
-                                                <div className="text-sm font-bold text-gray-900 dark:text-gray-100">${item.totalValue.toFixed(2)}</div>
-                                            </td>
-
-                                            <td className="px-6 py-4 whitespace-nowrap text-sm">
+                                                <div className="text-right">
+                                                    <div className="text-lg font-bold text-gray-900 dark:text-gray-100">${item.totalValue.toFixed(2)}</div>
+                                                    <div className="text-xs text-gray-500 dark:text-gray-400">{item.quantity} shares</div>
+                                                </div>
+                                            </div>
+                                            <div className="flex justify-between items-center text-sm">
+                                                <span className="text-gray-600 dark:text-gray-400">
+                                                    Avg: ${item.avgPrice?.toFixed(2) || 'N/A'}
+                                                </span>
                                                 <div className="flex gap-2">
                                                     <button
                                                         onClick={() => { setSelectedSymbol(item.symbol); setSelectedSide('buy'); }}
-                                                        className="px-3 py-1 rounded bg-green-600 text-white hover:bg-green-700 text-xs font-semibold"
-                                                    >Buy</button>
+                                                        className="px-3 py-1 text-xs bg-green-600 text-white rounded hover:bg-green-700 transition-colors"
+                                                    >
+                                                        Buy
+                                                    </button>
                                                     <button
                                                         onClick={() => { setSelectedSymbol(item.symbol); setSelectedSide('sell'); }}
-                                                        className="px-3 py-1 rounded bg-red-600 text-white hover:bg-red-700 text-xs font-semibold"
-                                                    >Sell</button>
+                                                        className="px-3 py-1 text-xs bg-red-600 text-white rounded hover:bg-red-700 transition-colors"
+                                                    >
+                                                        Sell
+                                                    </button>
                                                 </div>
-                                            </td>
-                                        </tr>
+                                            </div>
+                                        </div>
                                     ))}
-                                </tbody>
-                            </table>
-                        </div>
+                                </div>
+                            </div>
+
+                            {/* Desktop Table View */}
+                            <div className="hidden sm:block overflow-x-auto">
+                                <table className="min-w-full divide-y divide-gray-200 dark:divide-slate-700">
+                                    <thead className="bg-gray-50 dark:bg-slate-800">
+                                        <tr>
+                                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                                Stock
+                                            </th>
+                                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                                Quantity
+                                            </th>
+                                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                                Avg Buy Price
+                                            </th>
+                                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                                Total Value
+                                            </th>
+                                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                                Actions
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody className="bg-white dark:bg-slate-900 divide-y divide-gray-200 dark:divide-slate-700">
+                                        {portfolio.map((item) => (
+                                            <tr key={item.symbol} className="hover:bg-gray-50 dark:hover:bg-slate-800 transition-colors">
+                                                <td className="px-6 py-4 whitespace-nowrap">
+                                                    <div className="flex items-center">
+                                                        <img
+                                                            src={item.logo}
+                                                            alt={item.symbol}
+                                                            className="w-10 h-10 rounded-full mr-3"
+                                                            onError={(e) => {
+                                                                e.currentTarget.src = `https://ui-avatars.com/api/?name=${item.symbol}&background=random`;
+                                                            }}
+                                                        />
+                                                        <div>
+                                                            <div className="text-sm font-bold text-gray-900 dark:text-gray-100">{item.symbol}</div>
+                                                            <div className="text-sm text-gray-500 dark:text-gray-400">{item.name}</div>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td className="px-6 py-4 whitespace-nowrap">
+                                                    <div className="text-sm font-semibold text-gray-900 dark:text-gray-100">{item.quantity}</div>
+                                                </td>
+                                                {/* Current Price column removed per spec */}
+                                                <td className="px-6 py-4 whitespace-nowrap">
+                                                    {item.avgPrice !== undefined ? (
+                                                        <div className="text-sm font-semibold text-gray-700 dark:text-gray-300">${item.avgPrice.toFixed(2)}</div>
+                                                    ) : (
+                                                        <div className="text-sm text-gray-400 dark:text-gray-500">—</div>
+                                                    )}
+                                                </td>
+                                                <td className="px-6 py-4 whitespace-nowrap">
+                                                    <div className="text-sm font-bold text-gray-900 dark:text-gray-100">${item.totalValue.toFixed(2)}</div>
+                                                </td>
+
+                                                <td className="px-6 py-4 whitespace-nowrap text-sm">
+                                                    <div className="flex gap-2">
+                                                        <button
+                                                            onClick={() => { setSelectedSymbol(item.symbol); setSelectedSide('buy'); }}
+                                                            className="px-3 py-1 rounded bg-green-600 text-white hover:bg-green-700 text-xs font-semibold"
+                                                        >Buy</button>
+                                                        <button
+                                                            onClick={() => { setSelectedSymbol(item.symbol); setSelectedSide('sell'); }}
+                                                            className="px-3 py-1 rounded bg-red-600 text-white hover:bg-red-700 text-xs font-semibold"
+                                                        >Sell</button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </>
                     )}
                 </div>
                 {selectedSymbol && (
