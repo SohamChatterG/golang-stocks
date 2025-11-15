@@ -47,7 +47,7 @@ const NavButton: React.FC<NavButtonProps> = ({ to, children, variant = 'primary'
         <button
             onClick={handleClick}
             className={`
-                px-4 py-2 rounded-lg font-medium transition-all duration-200
+                px-3 py-2 sm:px-4 rounded-lg font-medium text-sm sm:text-base transition-all duration-200 whitespace-nowrap
                 ${getVariantClasses()}
                 ${isActive ? 'ring-2 ring-offset-2 ring-offset-slate-900 dark:ring-offset-slate-950' : ''}
             `}

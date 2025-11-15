@@ -49,9 +49,9 @@ export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     return (
         <ToastContext.Provider value={{ showToast, success, error, info, warning }}>
             {children}
-            {/* Toast Container */}
-            <div className="fixed top-4 right-4 z-[9999] flex flex-col gap-3 pointer-events-none">
-                <div className="flex flex-col gap-3 pointer-events-auto">
+            {/* Toast Container - Fixed positioning with proper mobile spacing */}
+            <div className="fixed top-2 right-2 sm:top-4 sm:right-4 z-[9999] flex flex-col gap-2 sm:gap-3 max-w-[calc(100vw-1rem)] sm:max-w-md pointer-events-none">
+                <div className="flex flex-col gap-2 sm:gap-3 pointer-events-auto">
                     {toasts.map((toast) => (
                         <Toast
                             key={toast.id}

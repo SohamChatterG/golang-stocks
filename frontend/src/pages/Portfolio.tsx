@@ -115,7 +115,7 @@ const Portfolio: React.FC = () => {
     // Removed unused handleLogout (direct inline logout used in button)
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 dark:from-slate-900 dark:to-slate-950">
+        <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 dark:from-slate-900 dark:to-slate-950 overflow-x-hidden">
             {/* Header */}
             <header className="bg-white/90 dark:bg-slate-900/80 backdrop-blur shadow-sm">
                 <div className="main-container py-3 sm:py-4">

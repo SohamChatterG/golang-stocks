@@ -85,7 +85,7 @@ const StockDetail: React.FC<StockDetailProps> = ({ symbol, onClose, onOrderCreat
 
     if (loading || !stock) {
         return (
-            <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[100]">
                 <div className="bg-white dark:bg-slate-900 rounded-lg p-8">
                     <p className="text-gray-900 dark:text-gray-100">Loading...</p>
                 </div>
@@ -94,7 +94,7 @@ const StockDetail: React.FC<StockDetailProps> = ({ symbol, onClose, onOrderCreat
     }
 
     return (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-2 sm:p-4">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[100] p-2 sm:p-4">
             <div className={`bg-white dark:bg-slate-900 rounded-lg shadow-xl overflow-hidden transition-all duration-300 ${isMaximized ? 'w-full h-full' : 'max-w-2xl w-full max-h-[95vh]'
                 }`}>
                 {/* Header */}

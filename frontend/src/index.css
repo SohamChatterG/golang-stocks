@@ -99,6 +99,17 @@
         box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3),
             0 2px 4px -1px rgba(0, 0, 0, 0.2);
     }
+
+    /* Prevent horizontal overflow on mobile */
+    @media (max-width: 640px) {
+        * {
+            max-width: 100%;
+        }
+
+        body {
+            overflow-x: hidden;
+        }
+    }
 }
 
 @keyframes flash-green {
@@ -109,7 +120,7 @@
     }
 
     50% {
-        background-color: rgba(239, 68, 68, 0.3);
+        background-color: rgba(34, 197, 94, 0.3);
     }
 }
 
